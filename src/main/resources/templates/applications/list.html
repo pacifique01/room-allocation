@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications | Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Admin Review</p>
+        <h1>Room Applications</h1>
+    </div>
+    <nav class="top-actions">
+        <a th:href="@{/rooms}" class="secondary-button">Back to Dashboard</a>
+    </nav>
+</header>
+
+<main class="page">
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <section class="table-panel">
+        <div class="booking-row" th:each="request : ${applications}">
+            <div>
+                <strong th:text="${request.room.roomNumber + ' - ' + request.purpose}">Room - Purpose</strong>
+                <span th:text="${request.reservedBy + ' | ' + request.applicantEmail}">Applicant</span>
+                <span th:text="${request.timeSlot}">Monday 09:00 - 11:00</span>
+            </div>
+            <div class="form-actions">
+                <form th:action="@{/applications/{id}/confirm(id=${request.id})}" method="post">
+                    <button type="submit" class="primary-button">Confirm</button>
+                </form>
+                <form th:action="@{/applications/{id}/reject(id=${request.id})}" method="post">
+                    <button type="submit" class="danger-button">Reject</button>
+                </form>
+            </div>
+        </div>
+        <p class="empty-text" th:if="${#lists.isEmpty(applications)}">No pending applications.</p>
+    </section>
+</main>
+</body>
+</html>

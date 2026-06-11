@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="landing-page">
+<header class="landing-nav">
+    <a th:href="@{/}" class="brand-mark">
+        <span>RA</span>
+        Room Allocation
+    </a>
+    <nav class="landing-menu" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact Us</a>
+    </nav>
+    <nav class="landing-actions" aria-label="Account navigation">
+        <a th:href="@{/login}" class="ghost-button" sec:authorize="!isAuthenticated()">Sign In</a>
+        <a th:href="@{/register}" class="primary-button" sec:authorize="!isAuthenticated()">Create Account</a>
+        <a th:href="@{/rooms}" class="primary-button" sec:authorize="isAuthenticated()">Dashboard</a>
+    </nav>
+</header>
+
+<main>
+    <section id="home" class="landing-hero">
+        <div class="hero-content">
+            <p class="eyebrow">Smart Campus Resource System</p>
+            <h1>Room Allocation</h1>
+            <p>Reserve teaching spaces, review applications, prevent clashes, and keep applicants notified from one smart dashboard.</p>
+            <div class="hero-actions">
+                <a th:href="@{/register}" class="primary-button" sec:authorize="!isAuthenticated()">Create Account</a>
+                <a th:href="@{/login}" class="secondary-button" sec:authorize="!isAuthenticated()">Sign In</a>
+                <a th:href="@{/rooms}" class="primary-button" sec:authorize="isAuthenticated()">Open Dashboard</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-strip" aria-label="System highlights">
+        <div class="landing-strip-inner">
+            <article>
+                <strong>Room Requests</strong>
+                <span>Lecturers and representatives submit dated room applications.</span>
+            </article>
+            <article>
+                <strong>Admin Review</strong>
+                <span>Confirm or reject pending applications from the dashboard.</span>
+            </article>
+            <article>
+                <strong>Email Updates</strong>
+                <span>Applicants receive confirmation and rejection notifications.</span>
+            </article>
+        </div>
+    </section>
+
+    <section id="about" class="landing-section about-section">
+        <div class="section-copy">
+            <p class="eyebrow">About Us</p>
+            <h2>Built for faster, fairer campus room allocation.</h2>
+            <p>
+                The Room Allocation system helps departments manage room requests without scattered messages,
+                manual follow-ups, or double bookings. Lecturers and representatives submit applications with a
+                selected room, purpose, date, and time; administrators review the queue and keep everyone updated.
+                For support, reach us at kevinmanzimugisha@gmail.com.
+            </p>
+        </div>
+        <div class="smart-panel">
+            <div>
+                <span>01</span>
+                <strong>Live request tracking</strong>
+                <p>Every applicant can see their application status and latest notification.</p>
+            </div>
+            <div>
+                <span>02</span>
+                <strong>Conflict prevention</strong>
+                <p>Confirmed bookings are checked before rooms are allocated.</p>
+            </div>
+            <div>
+                <span>03</span>
+                <strong>Admin control</strong>
+                <p>Admins manage rooms, pending applications, and email test tools.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="landing-section contact-section">
+        <div class="section-copy">
+            <p class="eyebrow">Contact Us</p>
+            <h2>Need help with room access or an application?</h2>
+            <p>Use the system dashboard for requests. For support, contact the room allocation administrator.</p>
+        </div>
+        <div class="contact-grid">
+            <article>
+                <strong>Email</strong>
+                <a href="mailto:kevinmanzimugisha@gmail.com">kevinmanzimugisha@gmail.com</a>
+            </article>
+            <article>
+                <strong>Office Hours</strong>
+                <span>Monday to Friday, 08:00 - 16:30</span>
+            </article>
+            <article>
+                <strong>Location</strong>
+                <span>Campus administration office</span>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer class="landing-footer">
+    <strong>Room Allocation</strong>
+    <span>Smart campus room requests, approvals, and notifications.</span>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact Us</a>
+    </nav>
+</footer>
+</body>
+</html>

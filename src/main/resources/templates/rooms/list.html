@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms | Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Smart Campus Resource System</p>
+        <h1>Room Allocation Dashboard</h1>
+    </div>
+    <nav class="top-actions">
+        <span class="user-pill">Signed in: <strong sec:authentication="name">user</strong></span>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/rooms/new}" class="primary-button">Add Room</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/applications}" class="secondary-button">Applications</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/email}" class="secondary-button">Email Test</a>
+        <a th:href="@{/notifications}" class="secondary-button">Notifications</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="ghost-button">Logout</button>
+        </form>
+    </nav>
+</header>
+
+<main class="page">
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <section class="summary-grid">
+        <article class="metric">
+            <span>Total Rooms</span>
+            <strong th:text="${#lists.size(rooms)}">0</strong>
+        </article>
+        <article class="metric">
+            <span>Available Rooms</span>
+            <strong th:text="${#lists.size(availableRooms)}">0</strong>
+        </article>
+        <article class="metric">
+            <span>Booked Rooms</span>
+            <strong th:text="${#lists.size(bookedRooms)}">0</strong>
+        </article>
+        <article class="metric">
+            <span>Access</span>
+            <strong sec:authorize="hasRole('ADMIN')">Admin</strong>
+            <strong sec:authorize="hasRole('LECTURER')">Lecturer</strong>
+            <strong sec:authorize="hasRole('CLASS_REPRESENTATIVE')">Class Representative</strong>
+            <strong sec:authorize="hasRole('CLUB_REPRESENTATIVE')">Club Representative</strong>
+            <strong sec:authorize="hasRole('STUDENT')">Student</strong>
+        </article>
+    </section>
+
+    <section class="notice-panel" th:if="${!#lists.isEmpty(notifications)}">
+        <h2>Latest Notifications</h2>
+        <p th:each="notification, stat : ${notifications}" th:if="${stat.index < 2}" th:text="${notification.message}">
+            Your room application was confirmed.
+        </p>
+    </section>
+
+    <section class="room-grid">
+        <article class="room-card" th:each="room : ${rooms}">
+            <div class="room-card-header">
+                <div>
+                    <h2 th:text="${room.roomNumber}">Room 101</h2>
+                    <p th:text="${room.roomType}">Computer Lab</p>
+                </div>
+                <span class="capacity-badge"><span th:text="${room.capacity}">30</span> seats</span>
+            </div>
+
+            <div class="booking-list">
+                <h3>Active Allocations</h3>
+                <div class="booking-row" th:each="booking : ${room.bookings}" th:if="${booking.status == T(org.project.model.BookingStatus).CONFIRMED}">
+                    <div>
+                        <strong th:text="${booking.purpose}">Study Session</strong>
+                        <span th:text="${booking.reservedBy}">Student Name</span>
+                    </div>
+                    <div class="booking-actions">
+                        <span th:text="${booking.timeSlot}">09:00 - 11:00</span>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/bookings/{id}/delete(id=${booking.id})}" class="danger-link"
+                           onclick="return confirm('Delete this booking?')">Delete</a>
+                    </div>
+                </div>
+                <p class="empty-text" th:if="${room.bookings.?[status == T(org.project.model.BookingStatus).CONFIRMED].isEmpty()}">No confirmed bookings assigned yet.</p>
+            </div>
+
+            <div class="card-actions">
+                <a sec:authorize="hasAnyRole('LECTURER','CLASS_REPRESENTATIVE','CLUB_REPRESENTATIVE')"
+                   th:if="${room.bookings.?[status == T(org.project.model.BookingStatus).CONFIRMED].isEmpty()}"
+                   th:href="@{/bookings/new(roomId=${room.id})}"
+                   class="primary-button">Apply</a>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/bookings/new(roomId=${room.id})}" class="secondary-button">Add Booking</a>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/rooms/{id}/edit(id=${room.id})}" class="secondary-button">Edit</a>
+                <a th:href="@{/rooms/{id}/delete(id=${room.id})}" class="danger-button"
+                   sec:authorize="hasRole('ADMIN')"
+                   onclick="return confirm('Delete this room and all its bookings?')">Delete</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="table-panel" sec:authorize="hasRole('ADMIN')" th:if="${!#lists.isEmpty(pendingApplications)}">
+        <h2>Pending Applications</h2>
+        <div class="booking-row" th:each="request : ${pendingApplications}">
+            <div>
+                <strong th:text="${request.room.roomNumber + ' - ' + request.purpose}">Room - Purpose</strong>
+                <span th:text="${request.applicantEmail + ' | ' + request.timeSlot}">applicant@example.com</span>
+            </div>
+            <a th:href="@{/applications}" class="secondary-button">Review</a>
+        </div>
+    </section>
+
+    <section class="table-panel" sec:authorize="!hasRole('ADMIN')" th:if="${!#lists.isEmpty(myApplications)}">
+        <h2>My Applications</h2>
+        <div class="booking-row" th:each="request : ${myApplications}">
+            <div>
+                <strong th:text="${request.room.roomNumber + ' - ' + request.purpose}">Room - Purpose</strong>
+                <span th:text="${request.timeSlot}">Monday 09:00 - 11:00</span>
+            </div>
+            <span class="status-badge" th:text="${request.status}">PENDING</span>
+        </div>
+    </section>
+
+    <section th:if="${#lists.isEmpty(rooms)}" class="empty-state">
+        <h2>No rooms have been added yet.</h2>
+        <p sec:authorize="hasRole('ADMIN')">Start by adding the first room to the allocation system.</p>
+        <p sec:authorize="!hasRole('ADMIN')">Ask an administrator to add rooms.</p>
+    </section>
+</main>
+</body>
+</html>

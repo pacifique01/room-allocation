@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Room Allocation'">Room Form</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Room Setup</p>
+        <h1 th:text="${pageTitle}">Add Room</h1>
+    </div>
+    <nav class="top-actions">
+        <a th:href="@{/rooms}" class="secondary-button">Back to Dashboard</a>
+    </nav>
+</header>
+
+<main class="form-page">
+    <form th:action="@{/rooms/save}" th:object="${room}" method="post" class="editor-panel">
+        <input type="hidden" th:field="*{id}">
+
+        <label>
+            Room Number
+            <input type="text" th:field="*{roomNumber}" placeholder="Example: Lab 302" required>
+            <span class="field-error" th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}"></span>
+        </label>
+
+        <label>
+            Capacity
+            <input type="number" th:field="*{capacity}" min="1" max="500" placeholder="Example: 45" required>
+            <span class="field-error" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></span>
+        </label>
+
+        <label>
+            Room Type
+            <select th:field="*{roomType}" required>
+                <option value="">Select type</option>
+                <option value="Computer Lab">Computer Lab</option>
+                <option value="Lecture Hall">Lecture Hall</option>
+                <option value="Conference Room">Conference Room</option>
+                <option value="Study Room">Study Room</option>
+                <option value="Seminar Room">Seminar Room</option>
+            </select>
+            <span class="field-error" th:if="${#fields.hasErrors('roomType')}" th:errors="*{roomType}"></span>
+        </label>
+
+        <div class="form-actions">
+            <a th:href="@{/rooms}" class="secondary-button">Cancel</a>
+            <button type="submit" class="primary-button">Save Room</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

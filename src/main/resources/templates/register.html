@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="auth-page">
+<main class="login-shell">
+    <section class="login-panel">
+        <p class="eyebrow">First Time Access</p>
+        <h1>Create Account</h1>
+        <p class="login-copy">Lecturers, class representatives recommended by a lecturer, and club representatives can request rooms.</p>
+
+        <form th:action="@{/register}" th:object="${user}" method="post" class="stack-form">
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Error</p>
+            </div>
+
+            <label>
+                Email
+                <input type="email" th:field="*{email}" placeholder="you@example.com" required autofocus>
+                <span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </label>
+
+            <label>
+                Password
+                <input type="password" th:field="*{password}" minlength="6" placeholder="Minimum 6 characters" required>
+                <span class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            </label>
+
+            <label>
+                Account Type
+                <select th:field="*{role}" required>
+                    <option value="">Choose account type</option>
+                    <option th:each="role : ${roles}" th:value="${role}" th:text="${role}">LECTURER</option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
+            </label>
+
+            <label>
+                Recommending Lecturer Email
+                <input type="email" th:field="*{recommendedByLecturerEmail}" placeholder="Required for class representatives">
+                <span class="field-error" th:if="${#fields.hasErrors('recommendedByLecturerEmail')}" th:errors="*{recommendedByLecturerEmail}"></span>
+            </label>
+
+            <div class="form-actions">
+                <a th:href="@{/login}" class="secondary-button">Back to Login</a>
+                <button type="submit" class="primary-button">Create Account</button>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Updates</p>
+        <h1>Notifications</h1>
+    </div>
+    <nav class="top-actions">
+        <a th:href="@{/rooms}" class="secondary-button">Back to Dashboard</a>
+    </nav>
+</header>
+
+<main class="page">
+    <section class="table-panel">
+        <div class="booking-row" th:each="notification : ${notifications}">
+            <div>
+                <strong th:text="${#temporals.format(notification.createdAt, 'dd MMM yyyy HH:mm')}">23 May 2026 12:00</strong>
+                <span th:text="${notification.message}">Your room application was confirmed.</span>
+            </div>
+        </div>
+        <p class="empty-text" th:if="${#lists.isEmpty(notifications)}">No notifications yet.</p>
+    </section>
+</main>
+</body>
+</html>

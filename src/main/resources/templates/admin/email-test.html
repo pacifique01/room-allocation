@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Test | Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Admin Tool</p>
+        <h1>Email Test</h1>
+    </div>
+    <nav class="top-actions">
+        <a th:href="@{/rooms}" class="secondary-button">Back to Dashboard</a>
+    </nav>
+</header>
+
+<main class="form-page">
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <form th:action="@{/admin/email/test}" method="post" class="editor-panel">
+        <label>
+            Send Test Email To
+            <input type="email" name="recipientEmail" placeholder="applicant@example.com" required autofocus>
+        </label>
+
+        <div class="form-actions">
+            <button type="submit" class="primary-button">Send Test Email</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

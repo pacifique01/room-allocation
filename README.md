@@ -31,8 +31,8 @@ The project is configured for:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/roomallocation
-spring.datasource.username=postgres
-spring.datasource.password=paccy
+spring.datasource.username=${DB_USERNAME:postgres}
+spring.datasource.password=${DB_PASSWORD:}
 ```
 
 ## Run
@@ -44,7 +44,7 @@ mvn spring-boot:run
 Open:
 
 ```text
-http://localhost:8080/rooms
+http://localhost:8081/rooms
 ```
 
 You will be redirected to the login page.

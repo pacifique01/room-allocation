@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Application | Room Allocation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Room Request</p>
+        <h1>Apply for Room</h1>
+    </div>
+    <nav class="top-actions">
+        <a th:href="@{/rooms}" class="secondary-button">Back to Dashboard</a>
+    </nav>
+</header>
+
+<main class="form-page">
+    <form th:action="@{/bookings/save}" th:object="${booking}" method="post" class="editor-panel">
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Error</p>
+        </div>
+
+        <input type="hidden" th:field="*{applicantEmail}">
+
+        <label>
+            Select Room
+            <select th:field="*{room.id}" required>
+                <option value="">Choose room</option>
+                <option th:each="room : ${rooms}"
+                        th:value="${room.id}"
+                        th:text="${room.roomNumber + ' - ' + room.roomType}">
+                    Lab 302 - Computer Lab
+                </option>
+            </select>
+            <span class="field-error" th:if="${#fields.hasErrors('room')}" th:errors="*{room}"></span>
+        </label>
+
+        <label>
+            Applicant Name or Group
+            <input type="text" th:field="*{reservedBy}" placeholder="Example: Dr Mokoena or Coding Club" required>
+            <span class="field-error" th:if="${#fields.hasErrors('reservedBy')}" th:errors="*{reservedBy}"></span>
+        </label>
+
+        <label>
+            Purpose
+            <input type="text" th:field="*{purpose}" placeholder="Example: Java Practical Session" required>
+            <span class="field-error" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}"></span>
+        </label>
+
+        <label>
+            Date and Time
+            <input type="hidden" th:field="*{timeSlot}">
+            <div class="datetime-grid">
+                <input type="date" name="bookingDate" th:value="${bookingDate}" required>
+                <input type="time" name="startTime" th:value="${startTime}" required>
+                <input type="time" name="endTime" th:value="${endTime}" required>
+            </div>
+            <span class="field-error" th:if="${#fields.hasErrors('timeSlot')}" th:errors="*{timeSlot}"></span>
+        </label>
+
+        <div class="form-actions">
+            <a th:href="@{/rooms}" class="secondary-button">Cancel</a>
+            <button type="submit" class="primary-button">Submit Application</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>
